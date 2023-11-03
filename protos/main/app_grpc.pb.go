@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: app.proto
 
-package main
+package protos
 
 import (
 	context "context"

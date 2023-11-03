@@ -1,4 +1,4 @@
-module main
+module service-profile
 
 go 1.21.1
 

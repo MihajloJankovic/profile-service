@@ -4,14 +4,13 @@
 // 	protoc        v3.19.6
 // source: app.proto
 
-package main
+package protos
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
-	protos
 )
 
 const (
