@@ -4,11 +4,10 @@
 // - protoc             v3.19.6
 // source: app.proto
 
-package main
+package protosgenerated
 
 import (
 	context "context"
-	"fmt"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -43,16 +42,6 @@ func (c *profileClient) GetProfile(ctx context.Context, in *ProfileRequest, opts
 	err := c.cc.Invoke(ctx, Profile_GetProfile_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
-	}
-	if(in.Email == "pera@gmail.com"){
-		out.Email = "pera@gmail.com"
-		out.Firstname ="MIhajlo"
-		out.Lastname = "Jankovic"
-		out.Birthday = "23.04.2002"
-		out.Gender = false
-		return out, nil
-	} else{
-		return nil, fmt.Errorf("Greskaaa")
 	}
 	return out, nil
 }

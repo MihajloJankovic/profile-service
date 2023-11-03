@@ -4,7 +4,7 @@
 // 	protoc        v3.19.6
 // source: app.proto
 
-package main
+package protosgenerated
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -115,35 +115,35 @@ func (x *ProfileResponse) GetFirstname() string {
 	if x != nil {
 		return x.Firstname
 	}
-	return x.Firstname
+	return ""
 }
 
 func (x *ProfileResponse) GetLastname() string {
 	if x != nil {
 		return x.Lastname
 	}
-	return x.Lastname
+	return ""
 }
 
 func (x *ProfileResponse) GetGender() bool {
 	if x != nil {
 		return x.Gender
 	}
-	return x.Gender
+	return false
 }
 
 func (x *ProfileResponse) GetBirthday() string {
 	if x != nil {
 		return x.Birthday
 	}
-	return x.Birthday
+	return ""
 }
 
 func (x *ProfileResponse) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
-	return x.Email
+	return ""
 }
 
 var File_app_proto protoreflect.FileDescriptor
