@@ -115,35 +115,35 @@ func (x *ProfileResponse) GetFirstname() string {
 	if x != nil {
 		return x.Firstname
 	}
-	return ""
+	return x.Firstname
 }
 
 func (x *ProfileResponse) GetLastname() string {
 	if x != nil {
 		return x.Lastname
 	}
-	return ""
+	return x.Lastname
 }
 
 func (x *ProfileResponse) GetGender() bool {
 	if x != nil {
 		return x.Gender
 	}
-	return false
+	return x.Gender
 }
 
 func (x *ProfileResponse) GetBirthday() string {
 	if x != nil {
 		return x.Birthday
 	}
-	return ""
+	return x.Birthday
 }
 
 func (x *ProfileResponse) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
-	return ""
+	return x.Email
 }
 
 var File_app_proto protoreflect.FileDescriptor

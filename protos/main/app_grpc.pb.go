@@ -44,7 +44,7 @@ func (c *profileClient) GetProfile(ctx context.Context, in *ProfileRequest, opts
 	if err != nil {
 		return nil, err
 	}
-	if(in.GetEmail() == "pera@gmail.com"){
+	if(in.Email == "pera@gmail.com"){
 		out.Email = "pera@gmail.com"
 		out.Firstname ="MIhajlo"
 		out.Lastname = "Jankovic"
