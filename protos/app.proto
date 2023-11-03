@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 option go_package = "../main";
 service profile {
   rpc GetProfile(ProfileRequest) returns (ProfileResponse);
