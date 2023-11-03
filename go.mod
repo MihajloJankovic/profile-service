@@ -1,4 +1,4 @@
-module service-profile
+module github.com/MihajloJankovic/profile-service
 
 go 1.21.1
 
