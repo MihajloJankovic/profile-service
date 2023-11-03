@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "../main";
+service profile {
+  rpc GetProfile(ProfileRequest) returns (ProfileResponse);
+}
+
+message  ProfileRequest {
+  string email = 1;
+}
+message  ProfileResponse {
+  string firstname = 1;
+  string lastname = 2;
+  bool gender = 3;
+  string birthday = 4;
+  string email = 5;
+
+}
