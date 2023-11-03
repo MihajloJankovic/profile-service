@@ -16,7 +16,7 @@ func main() {
 
 	sm := http.NewServeMux()
 
-	srv := &http.Server{Addr: ":9090", Handler: sm}
+	srv := &http.Server{Addr: ":9091", Handler: sm}
 	go func() {
 		log.Println("server starting")
 		if err := srv.ListenAndServe(); err != nil {
