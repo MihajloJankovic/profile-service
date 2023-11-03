@@ -13,7 +13,7 @@ type myInvoiceServer struct {
 	protos.UnimplementedProfileServer
 }
 
-func GetProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.ProfileResponse, error) {
+func (s myInvoiceServer) GetProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.ProfileResponse, error) {
 
 	out := new(protos.ProfileResponse)
 
@@ -27,15 +27,12 @@ func GetProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.Profile
 		out.Gender = false
 		return out, nil
 	} else {
-		return nil, fmt.Errorf("Greskaaa")
+		return nil, fmt.Errorf("Greska")
 	}
 	return out, nil
 }
-func mustEmbedUnimplementedProfileServer() {
-
-}
 func main() {
-	
+
 	lis, err := net.Listen("tcp", ":9091")
 	if err != nil {
 		log.Fatal(err)
