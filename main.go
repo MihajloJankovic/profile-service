@@ -1,36 +1,13 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"github.com/MihajloJankovic/profile-service/handlers"
 	protos "github.com/MihajloJankovic/profile-service/protos/main"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 )
 
-type myInvoiceServer struct {
-	protos.UnimplementedProfileServer
-}
-
-func (s myInvoiceServer) GetProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.ProfileResponse, error) {
-
-	out := new(protos.ProfileResponse)
-
-	fmt.Println(in.GetEmail())
-	fmt.Println(in.Email)
-	if in.Email == "pera@gmail.com" {
-		out.Email = "pera@gmail.com"
-		out.Firstname = "MIhajlo"
-		out.Lastname = "Jankovic"
-		out.Birthday = "23.04.2002"
-		out.Gender = false
-		return out, nil
-	} else {
-		return nil, fmt.Errorf("Greska")
-	}
-	return out, nil
-}
 func main() {
 
 	lis, err := net.Listen("tcp", ":9091")
@@ -38,7 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 	serverRegistar := grpc.NewServer()
-	service := &myInvoiceServer{}
+	service := handlers.NewServer()
 
 	protos.RegisterProfileServer(serverRegistar, service)
 	err = serverRegistar.Serve(lis)
