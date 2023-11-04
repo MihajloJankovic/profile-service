@@ -69,70 +69,39 @@ func (pr *ProfileRepo) Ping() {
 	fmt.Println(databases)
 }
 func (pr *ProfileRepo) GetAll() (*[]protos.ProfileResponse, error) {
-	// Initialise context (after 5 seconds timeout, abort operation)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	profileCollection := pr.getCollection()
-
-	var profilesSlice []protos.ProfileResponse // Create a slice to hold the results
+	var profilesSlice []protos.ProfileResponse
 
 	profileCursor, err := profileCollection.Find(ctx, bson.M{})
 	if err != nil {
 		pr.logger.Println(err)
-		return nil, err // Return nil and the error
+		return nil, err
 	}
-
 	if err = profileCursor.All(ctx, &profilesSlice); err != nil {
 		pr.logger.Println(err)
-		return nil, err // Return nil and the error
+		return nil, err
 	}
-
 	return &profilesSlice, nil
 }
 
 func (pr *ProfileRepo) GetById(emaila string) (*protos.ProfileResponse, error) {
-	// Initialise context (after 5 seconds timeout, abort operation)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	profileCollection := pr.getCollection()
+	var profile protos.ProfileResponse
 
-	var profile protos.ProfileResponse // Create a slice to hold the results
-
-	profileCursor, err := profileCollection.Find(ctx, bson.M{"email": emaila})
-	pr.logger.Println(profileCursor)
+	err := profileCollection.FindOne(ctx, bson.M{"email": emaila}).Decode(&profile)
 	if err != nil {
 		pr.logger.Println(err)
-		return nil, err // Return nil and the error
-	}
-
-	if err = profileCursor.All(ctx, &profile); err != nil {
-		pr.logger.Println(err)
-		return nil, err // Return nil and the error
+		return nil, err
 	}
 
 	return &profile, nil
 }
-
-//	func (pr *PatientRepo) GetByName(name string) (Patients, error) {
-//		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-//		defer cancel()
-//
-//		patientsCollection := pr.getCollection()
-//
-//		var patients Patients
-//		patientsCursor, err := patientsCollection.Find(ctx, bson.M{"name": name})
-//		if err != nil {
-//			pr.logger.Println(err)
-//			return nil, err
-//		}
-//		if err = patientsCursor.All(ctx, &patients); err != nil {
-//			pr.logger.Println(err)
-//			return nil, err
-//		}
-//		return patients, nil
-//	}
 func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -147,66 +116,8 @@ func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 	return nil
 }
 
-//	func (pr *PatientRepo) Update(id string, patient *Patient) error {
-//		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-//		defer cancel()
-//		patientsCollection := pr.getCollection()
-//
-//		objID, _ := primitive.ObjectIDFromHex(id)
-//		filter := bson.M{"_id": objID}
-//		update := bson.M{"$set": bson.M{
-//			"name":    patient.Name,
-//			"surname": patient.Surname,
-//		}}
-//		result, err := patientsCollection.UpdateOne(ctx, filter, update)
-//		pr.logger.Printf("Documents matched: %v\n", result.MatchedCount)
-//		pr.logger.Printf("Documents updated: %v\n", result.ModifiedCount)
-//
-//		if err != nil {
-//			pr.logger.Println(err)
-//			return err
-//		}
-//		return nil
-//	}
-//
-//	func (pr *PatientRepo) AddPhoneNumber(id string, phoneNumber string) error {
-//		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-//		defer cancel()
-//		patientsCollection := pr.getCollection()
-//
-//		objID, _ := primitive.ObjectIDFromHex(id)
-//		filter := bson.M{"_id": objID}
-//		update := bson.M{"$push": bson.M{
-//			"phoneNumbers": phoneNumber,
-//		}}
-//		result, err := patientsCollection.UpdateOne(ctx, filter, update)
-//		pr.logger.Printf("Documents matched: %v\n", result.MatchedCount)
-//		pr.logger.Printf("Documents updated: %v\n", result.ModifiedCount)
-//
-//		if err != nil {
-//			pr.logger.Println(err)
-//			return err
-//		}
-//		return nil
-//	}
-//
-//	func (pr *PatientRepo) Delete(id string) error {
-//		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-//		defer cancel()
-//		patientsCollection := pr.getCollection()
-//
-//		objID, _ := primitive.ObjectIDFromHex(id)
-//		filter := bson.D{{Key: "_id", Value: objID}}
-//		result, err := patientsCollection.DeleteOne(ctx, filter)
-//		if err != nil {
-//			pr.logger.Println(err)
-//			return err
-//		}
-//		pr.logger.Printf("Documents deleted: %v\n", result.DeletedCount)
-//		return nil
-//	}
 func (pr *ProfileRepo) getCollection() *mongo.Collection {
-	patientDatabase := pr.cli.Database("mongoDemo")
-	patientsCollection := patientDatabase.Collection("patients")
-	return patientsCollection
+	profileDatabase := pr.cli.Database("mongoDemo")
+	profileCollection := profileDatabase.Collection("profiles")
+	return profileCollection
 }

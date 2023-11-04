@@ -23,19 +23,19 @@ func main() {
 	defer cancel()
 
 	logger := log.New(os.Stdout, "[profile-main] ", log.LstdFlags)
-	profilelog := log.New(os.Stdout, "[profile-log] ", log.LstdFlags)
+	profilelog := log.New(os.Stdout, "[profile-repo-log] ", log.LstdFlags)
 
-	store, err := handlers.New(timeoutContext, profilelog)
+	profileRepo, err := handlers.New(timeoutContext, profilelog)
 	if err != nil {
 		logger.Fatal(err)
 	}
-	defer store.Disconnect(timeoutContext)
+	defer profileRepo.Disconnect(timeoutContext)
 
 	// NoSQL: Checking if the connection was established
-	store.Ping()
+	profileRepo.Ping()
 
 	//Initialize the handler and inject said logger
-	service := handlers.NewServer(logger, store)
+	service := handlers.NewServer(logger, profileRepo)
 
 	protos.RegisterProfileServer(serverRegistar, service)
 	err = serverRegistar.Serve(lis)

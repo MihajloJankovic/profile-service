@@ -25,18 +25,6 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 		s.logger.Println(err)
 		return nil, err
 	}
-	//
-	////add db
-	//if in.Email == "pera@gmail.com" {
-	//	out.Email = "pera@gmail.com"
-	//	out.Firstname = "MIhajlo"
-	//	out.Lastname = "Jankovic"
-	//	out.Birthday = "23.04.2002"
-	//	out.Gender = false
-	//	return out, nil
-	//} else {
-	//	return nil, fmt.Errorf("Greska")
-	//}
 	return out, nil
 }
 func (s myProfileServer) SetProfile(kon context.Context, in *protos.ProfileResponse) (*protos.Empty, error) {
@@ -48,6 +36,10 @@ func (s myProfileServer) SetProfile(kon context.Context, in *protos.ProfileRespo
 	out.Birthday = in.GetBirthday()
 	out.Gender = in.GetGender()
 
-	s.logger.Println(s.repo.Create(out))
+	err := s.repo.Create(out)
+	if(err != nil) {
+		s.logger.Println(err)
+        return nil, err
+	}
 	return new(protos.Empty), nil
 }
