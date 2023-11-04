@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"github.com/MihajloJankovic/profile-service/handlers"
 	protos "github.com/MihajloJankovic/profile-service/protos/main"
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
+	"time"
 )
 
 func main() {
@@ -15,7 +18,24 @@ func main() {
 		log.Fatal(err)
 	}
 	serverRegistar := grpc.NewServer()
-	service := handlers.NewServer()
+
+	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	logger := log.New(os.Stdout, "[profile-main] ", log.LstdFlags)
+	profilelog := log.New(os.Stdout, "[profile-log] ", log.LstdFlags)
+
+	store, err := handlers.New(timeoutContext, profilelog)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	defer store.Disconnect(timeoutContext)
+
+	// NoSQL: Checking if the connection was established
+	store.Ping()
+
+	//Initialize the handler and inject said logger
+	service := handlers.NewServer(logger, store)
 
 	protos.RegisterProfileServer(serverRegistar, service)
 	err = serverRegistar.Serve(lis)

@@ -3,6 +3,7 @@ syntax = "proto3";
 option go_package = "../main";
 service profile {
   rpc GetProfile(ProfileRequest) returns (ProfileResponse);
+  rpc SetProfile(ProfileResponse) returns (Empty);
 }
 
 message  ProfileRequest {
@@ -15,4 +16,6 @@ message  ProfileResponse {
   string birthday = 4;
   string email = 5;
 
+}
+message  Empty {
 }
