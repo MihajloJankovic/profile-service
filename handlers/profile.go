@@ -20,8 +20,11 @@ func NewServer(l *log.Logger, r *ProfileRepo) *myProfileServer {
 // add edit,create user ,delete user
 func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.ProfileResponse, error) {
 
-	out := new(protos.ProfileResponse)
-	s.logger.Println(s.repo.GetAll())
+	out, err := s.repo.GetById(in.GetEmail())
+	if err != nil {
+		s.logger.Fatal(err)
+		return nil, err
+	}
 	//
 	////add db
 	//if in.Email == "pera@gmail.com" {
