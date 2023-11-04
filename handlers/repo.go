@@ -117,7 +117,7 @@ func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 }
 
 func (pr *ProfileRepo) getCollection() *mongo.Collection {
-	profileDatabase := pr.cli.Database("mongoDemo")
+	profileDatabase := pr.cli.Database("mongoProfile")
 	profileCollection := profileDatabase.Collection("profiles")
 	return profileCollection
 }
