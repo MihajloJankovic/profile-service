@@ -101,6 +101,7 @@ func (pr *ProfileRepo) GetById(emaila string) (*protos.ProfileResponse, error) {
 	var profile protos.ProfileResponse // Create a slice to hold the results
 
 	profileCursor, err := profileCollection.Find(ctx, bson.M{"email": emaila})
+	pr.logger.Println(profileCursor)
 	if err != nil {
 		pr.logger.Println(err)
 		return nil, err // Return nil and the error

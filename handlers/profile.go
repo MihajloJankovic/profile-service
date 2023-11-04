@@ -22,7 +22,7 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 
 	out, err := s.repo.GetById(in.GetEmail())
 	if err != nil {
-		s.logger.Fatal(err)
+		s.logger.Println(err)
 		return nil, err
 	}
 	//
