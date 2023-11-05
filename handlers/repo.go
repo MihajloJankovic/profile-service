@@ -115,9 +115,31 @@ func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 	pr.logger.Printf("Documents ID: %v\n", result.InsertedID)
 	return nil
 }
+func (pr *ProfileRepo) Update(profile *protos.ProfileResponse) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	profileCollection := pr.getCollection()
 
+	filter := bson.M{"email": profile.GetEmail()}
+	update := bson.M{"$set": bson.M{
+		"gender":    profile.GetGender(),
+		"firstname": profile.GetFirstname(),
+		"lastname":  profile.GetLastname(),
+		"birthday":  profile.GetBirthday(),
+	}}
+	result, err := profileCollection.UpdateOne(ctx, filter, update)
+	pr.logger.Printf("Documents matched: %v\n", result.MatchedCount)
+	pr.logger.Printf("Documents updated: %v\n", result.ModifiedCount)
+
+	if err != nil {
+		pr.logger.Println(err)
+		return err
+	}
+	return nil
+}
 func (pr *ProfileRepo) getCollection() *mongo.Collection {
 	profileDatabase := pr.cli.Database("mongoProfile")
 	profileCollection := profileDatabase.Collection("profiles")
 	return profileCollection
 }
+

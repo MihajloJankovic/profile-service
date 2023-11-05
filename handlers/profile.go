@@ -37,9 +37,16 @@ func (s myProfileServer) SetProfile(kon context.Context, in *protos.ProfileRespo
 	out.Gender = in.GetGender()
 
 	err := s.repo.Create(out)
-	if(err != nil) {
+	if err != nil {
 		s.logger.Println(err)
-        return nil, err
+		return nil, err
+	}
+	return new(protos.Empty), nil
+}
+func (s myProfileServer) UpdateProfile(kon context.Context, in *protos.ProfileResponse) (*protos.Empty, error) {
+	err := s.repo.Update(in)
+	if err != nil {
+		return nil, err
 	}
 	return new(protos.Empty), nil
 }

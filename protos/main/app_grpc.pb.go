@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Profile_GetProfile_FullMethodName = "/profile/GetProfile"
-	Profile_SetProfile_FullMethodName = "/profile/SetProfile"
+	Profile_GetProfile_FullMethodName    = "/profile/GetProfile"
+	Profile_SetProfile_FullMethodName    = "/profile/SetProfile"
+	Profile_UpdateProfile_FullMethodName = "/profile/UpdateProfile"
 )
 
 // ProfileClient is the client API for Profile service.
@@ -29,6 +30,7 @@ const (
 type ProfileClient interface {
 	GetProfile(ctx context.Context, in *ProfileRequest, opts ...grpc.CallOption) (*ProfileResponse, error)
 	SetProfile(ctx context.Context, in *ProfileResponse, opts ...grpc.CallOption) (*Empty, error)
+	UpdateProfile(ctx context.Context, in *ProfileResponse, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type profileClient struct {
@@ -57,12 +59,22 @@ func (c *profileClient) SetProfile(ctx context.Context, in *ProfileResponse, opt
 	return out, nil
 }
 
+func (c *profileClient) UpdateProfile(ctx context.Context, in *ProfileResponse, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Profile_UpdateProfile_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProfileServer is the server API for Profile service.
 // All implementations must embed UnimplementedProfileServer
 // for forward compatibility
 type ProfileServer interface {
 	GetProfile(context.Context, *ProfileRequest) (*ProfileResponse, error)
 	SetProfile(context.Context, *ProfileResponse) (*Empty, error)
+	UpdateProfile(context.Context, *ProfileResponse) (*Empty, error)
 	mustEmbedUnimplementedProfileServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedProfileServer) GetProfile(context.Context, *ProfileRequest) (
 }
 func (UnimplementedProfileServer) SetProfile(context.Context, *ProfileResponse) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetProfile not implemented")
+}
+func (UnimplementedProfileServer) UpdateProfile(context.Context, *ProfileResponse) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
 }
 func (UnimplementedProfileServer) mustEmbedUnimplementedProfileServer() {}
 
@@ -125,6 +140,24 @@ func _Profile_SetProfile_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Profile_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProfileResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfileServer).UpdateProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Profile_UpdateProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfileServer).UpdateProfile(ctx, req.(*ProfileResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Profile_ServiceDesc is the grpc.ServiceDesc for Profile service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var Profile_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetProfile",
 			Handler:    _Profile_SetProfile_Handler,
+		},
+		{
+			MethodName: "UpdateProfile",
+			Handler:    _Profile_UpdateProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

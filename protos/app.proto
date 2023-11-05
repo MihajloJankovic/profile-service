@@ -4,6 +4,7 @@ option go_package = "../main";
 service profile {
   rpc GetProfile(ProfileRequest) returns (ProfileResponse);
   rpc SetProfile(ProfileResponse) returns (Empty);
+  rpc UpdateProfile(ProfileResponse) returns (Empty);
 }
 
 message  ProfileRequest {
