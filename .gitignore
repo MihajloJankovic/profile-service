@@ -1,0 +1,15 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+*.iml
+*.ipr
+*.iws
+.idea/
+/build/
+/dist/
+/out/
