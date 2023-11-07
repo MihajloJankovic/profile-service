@@ -33,6 +33,7 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 
 EXPOSE 9091
+EXPOSE 27017
 
 # Command to run the executable
 CMD ["./main"]
