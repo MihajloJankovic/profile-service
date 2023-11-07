@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.31.0
 // 	protoc        v3.19.6
-// source: app.proto
+// source: generacijaaplikacije.proto
 
 package protosgenerated
 
