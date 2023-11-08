@@ -35,6 +35,7 @@ func (s myProfileServer) SetProfile(kon context.Context, in *protos.ProfileRespo
 	out.Lastname = in.GetLastname()
 	out.Birthday = in.GetBirthday()
 	out.Gender = in.GetGender()
+	out.Role = in.GetRole()
 
 	err := s.repo.Create(out)
 	if err != nil {

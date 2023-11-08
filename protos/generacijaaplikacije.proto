@@ -16,6 +16,7 @@ message  ProfileResponse {
   bool gender = 3;
   string birthday = 4;
   string email = 5;
+  string role = 6;
 
 }
 message  Empty {
