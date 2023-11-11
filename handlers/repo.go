@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	protos "github.com/MihajloJankovic/profile-service/protos/main"
 	"log"
@@ -107,6 +108,13 @@ func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 	defer cancel()
 	profileCollection := pr.getCollection()
 
+	curs, _ := profileCollection.Find(ctx, bson.M{"email": profile.GetEmail()})
+	hasResults := curs.Next(ctx)
+	if hasResults {
+		err := errors.New("User already exists")
+		pr.logger.Println(err)
+		return err
+	}
 	result, err := profileCollection.InsertOne(ctx, &profile)
 	if err != nil {
 		pr.logger.Println(err)
@@ -142,4 +150,3 @@ func (pr *ProfileRepo) getCollection() *mongo.Collection {
 	profileCollection := profileDatabase.Collection("profiles")
 	return profileCollection
 }
-
