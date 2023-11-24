@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: generacijaaplikacije.proto
 
-package paketable
+package aaab
 
 import (
 	context "context"

@@ -36,8 +36,8 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 
 func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileResponse) (*protos.Empty, error) {
 	// Validate required fields
-	if in.GetEmail() == "" || in.GetFirstname() == "" || in.GetLastname() == "" {
-		return nil, errors.New("Invalid input. Email, firstname, and lastname are required.")
+	if in.GetEmail() == "" || in.GetFirstname() == "" || in.GetLastname() == "" || in.GetUsername() == ""{
+		return nil, errors.New("Invalid input. Email, firstname, username, and lastname are required.")
 	}
 
 	// Validate email format
@@ -54,6 +54,7 @@ func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileRespo
 	out.Birthday = in.GetBirthday()
 	out.Gender = in.GetGender()
 	out.Role = in.GetRole()
+	out.Username= in.Username
 
 	err := s.repo.Create(out)
 	if err != nil {

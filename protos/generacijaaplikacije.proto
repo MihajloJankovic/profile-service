@@ -17,6 +17,7 @@ message  ProfileResponse {
   string birthday = 4;
   string email = 5;
   string role = 6;
+  string username=7;
 
 }
 message  Empty {

@@ -115,6 +115,13 @@ func (pr *ProfileRepo) Create(profile *protos.ProfileResponse) error {
 		pr.logger.Println(err)
 		return err
 	}
+	curss, _ := profileCollection.Find(ctx, bson.M{"username": profile.GetUsername()})
+	hasResultss := curss.Next(ctx)
+	if hasResultss {
+		err := errors.New("Username already exists")
+		pr.logger.Println(err)
+		return err
+	}
 	result, err := profileCollection.InsertOne(ctx, &profile)
 	if err != nil {
 		pr.logger.Println(err)
@@ -130,6 +137,7 @@ func (pr *ProfileRepo) Update(profile *protos.ProfileResponse) error {
 
 	filter := bson.M{"email": profile.GetEmail()}
 	update := bson.M{"$set": bson.M{
+		"username":  profile.GetUsername(),
 		"gender":    profile.GetGender(),
 		"firstname": profile.GetFirstname(),
 		"lastname":  profile.GetLastname(),
