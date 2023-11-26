@@ -36,7 +36,7 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 
 func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileResponse) (*protos.Empty, error) {
 	// Validate required fields
-	if in.GetEmail() == "" || in.GetFirstname() == "" || in.GetLastname() == "" || in.GetUsername() == ""{
+	if in.GetEmail() == "" || in.GetFirstname() == "" || in.GetLastname() == "" || in.GetUsername() == "" {
 		return nil, errors.New("Invalid input. Email, firstname, username, and lastname are required.")
 	}
 
@@ -54,7 +54,7 @@ func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileRespo
 	out.Birthday = in.GetBirthday()
 	out.Gender = in.GetGender()
 	out.Role = in.GetRole()
-	out.Username= in.Username
+	out.Username = in.Username
 
 	err := s.repo.Create(out)
 	if err != nil {
@@ -78,6 +78,14 @@ func (s myProfileServer) UpdateProfile(ctx context.Context, in *protos.ProfileRe
 	// Additional validation for other fields if needed
 
 	err := s.repo.Update(in)
+	if err != nil {
+		return nil, err
+	}
+	return new(protos.Empty), nil
+}
+
+func (s myProfileServer) DeleteProfile(ctx context.Context, in *protos.ProfileRequest) (*protos.Empty, error) {
+	err := s.repo.DeleteByEmail(in.GetEmail())
 	if err != nil {
 		return nil, err
 	}

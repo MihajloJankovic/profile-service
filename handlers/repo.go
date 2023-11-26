@@ -153,6 +153,25 @@ func (pr *ProfileRepo) Update(profile *protos.ProfileResponse) error {
 	}
 	return nil
 }
+
+func (pr *ProfileRepo) DeleteByEmail(email string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	profileCollection := pr.getCollection()
+
+	filter := bson.M{"email": email}
+	result, err := profileCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		pr.logger.Println(err)
+		return err
+	}
+
+	pr.logger.Printf("Document deleted for email %s. Documents deleted: %v\n", email, result.DeletedCount)
+
+	return nil
+}
+
 func (pr *ProfileRepo) getCollection() *mongo.Collection {
 	profileDatabase := pr.cli.Database("mongoProfile")
 	profileCollection := profileDatabase.Collection("profiles")
