@@ -27,6 +27,7 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 	}
 
 	out, err := s.repo.GetById(in.GetEmail())
+	s.logger.Println(out)
 	if err != nil {
 		s.logger.Println(err)
 		return nil, err
