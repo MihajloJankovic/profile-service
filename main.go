@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	protosAuth "github.com/MihajloJankovic/Auth-Service/protos/main"
 	"github.com/MihajloJankovic/profile-service/handlers"
 	protos "github.com/MihajloJankovic/profile-service/protos/main"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
 	"os"
@@ -33,9 +35,19 @@ func main() {
 
 	// NoSQL: Checking if the connection was established
 	profileRepo.Ping()
-
+	connAuth, err := grpc.Dial("auth-service:9094", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err)
+	}
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(connAuth)
+	ccAuth := protosAuth.NewAuthClient(connAuth)
 	//Initialize the handler and inject said logger
-	service := handlers.NewServer(logger, profileRepo)
+	service := handlers.NewServer(logger, profileRepo, ccAuth)
 
 	protos.RegisterProfileServer(serverRegistar, service)
 	err = serverRegistar.Serve(lis)

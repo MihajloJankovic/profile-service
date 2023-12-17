@@ -3,13 +3,23 @@ syntax = "proto3";
 option go_package = "../main";
 service profile {
   rpc GetProfile(ProfileRequest) returns (ProfileResponse);
-  rpc SetProfile(ProfileResponse) returns (Empty);
+  rpc SetProfile(ProfileSet) returns (Empty);
   rpc UpdateProfile(ProfileResponse) returns (Empty);
   rpc DeleteProfile(ProfileRequest) returns (Empty);
 }
 
 message  ProfileRequest {
   string email = 1;
+}
+message ProfileSet{
+ string Email     = 1;
+  string Firstname = 2;
+  string Lastname = 3;
+  string Birthday = 4;
+  string Gender  = 5;
+  string Role     = 6;
+  string Password  = 7;
+  string  Username = 8;
 }
 message  ProfileResponse {
   string firstname = 1;

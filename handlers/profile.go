@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	protosAuth "github.com/MihajloJankovic/Auth-Service/protos/main"
 	protos "github.com/MihajloJankovic/profile-service/protos/main"
 	"log"
 	"strings"
@@ -13,10 +14,11 @@ type myProfileServer struct {
 	logger *log.Logger
 	// NoSQL: injecting product repository
 	repo *ProfileRepo
+	cc   protosAuth.AuthClient
 }
 
-func NewServer(l *log.Logger, r *ProfileRepo) *myProfileServer {
-	return &myProfileServer{*new(protos.UnimplementedProfileServer), l, r}
+func NewServer(l *log.Logger, r *ProfileRepo, cc protosAuth.AuthClient) *myProfileServer {
+	return &myProfileServer{*new(protos.UnimplementedProfileServer), l, r, cc}
 }
 
 // add edit,create user ,delete user
@@ -35,7 +37,7 @@ func (s myProfileServer) GetProfile(ctx context.Context, in *protos.ProfileReque
 	return out, nil
 }
 
-func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileResponse) (*protos.Empty, error) {
+func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileSet) (*protos.Empty, error) {
 	// Validate required fields
 	if strings.TrimSpace(in.GetEmail()) == "" || strings.TrimSpace(in.GetFirstname()) == "" || strings.TrimSpace(in.GetLastname()) == "" || strings.TrimSpace(in.GetUsername()) == "" {
 		return nil, errors.New("Invalid input. Email, firstname, username, and lastname are required.")
@@ -60,6 +62,14 @@ func (s myProfileServer) SetProfile(ctx context.Context, in *protos.ProfileRespo
 	err := s.repo.Create(out)
 	if err != nil {
 		s.logger.Println(err)
+		return nil, err
+	}
+	out2 := new(protosAuth.AuthRequest)
+	out2.Email = strings.TrimSpace(in.GetEmail())
+	out2.Password = strings.TrimSpace(in.GetPassword())
+	_, err = s.cc.Register(context.Background(), out2)
+	if err != nil {
+		log.Printf("RPC failed: %v\n", err)
 		return nil, err
 	}
 	return new(protos.Empty), nil
